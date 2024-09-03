@@ -1,3 +1,3 @@
 <!-- readme.md -->
 
-## ログイン機能の追加
+## Added login function
