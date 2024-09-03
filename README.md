@@ -1,6 +1,7 @@
 <!-- readme.md -->
 
 # test
+- branchを使用
 
 ## chapter1
 
