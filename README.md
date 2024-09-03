@@ -1,8 +1,6 @@
 <!-- readme.md -->
 
-# test
-- branchを使用
-- できた
+# ログイン機能追加完了
 
 ## chapter1
 
