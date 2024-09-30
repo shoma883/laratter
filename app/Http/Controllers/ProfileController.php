@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Tweet;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -30,6 +32,18 @@ class ProfileController extends Controller
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
+        }
+
+        // 自己紹介文を保存
+        $request->user()->bio = $request->input('bio');
+
+        // 画像がアップロードされているか確認
+        if ($request->hasFile('profile_image')) {
+            // 画像をストレージに保存し、パスをデータベースに保存
+            $path = $request->file('profile_image')->store('profile_images', 'public');
+            
+            // ユーザーオブジェクトに直接プロファイル画像のパスを設定
+            $request->user()->profile_image = $path; // 画像のパスを保存
         }
 
         $request->user()->save();
@@ -57,4 +71,27 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function show(User $user)
+    {
+        if (auth()->user()->is($user)) {
+        $tweets = Tweet::query()
+            ->where('user_id', $user->id)  // 自分のツイート
+            ->orWhereIn('user_id', $user->follows->pluck('id')) // フォローしているユーザーのツイート
+            ->latest()
+            ->paginate(10);
+        } else {
+        // 他のユーザーの場合、そのユーザーのツイートのみを取得
+        $tweets = $user
+            ->tweets()
+            ->latest()
+            ->paginate(10);
+        }
+
+        // ユーザーのフォロワーとフォローしているユーザーを取得
+        $user->load(['follows', 'followers']);
+
+        return view('profile.show', compact('user', 'tweets'));
+    }
+
 }

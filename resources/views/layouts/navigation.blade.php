@@ -1,5 +1,3 @@
-<!-- resources/views/layouts/navigation.blade.php -->
-
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
   <!-- Primary Navigation Menu -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,9 +21,12 @@
           <x-nav-link :href="route('tweets.create')" :active="request()->routeIs('tweets.create')">
             {{ __('Tweet作成') }}
           </x-nav-link>
-          <!-- 🔽 リンク追加 -->
           <x-nav-link :href="route('tweets.search')" :active="request()->routeIs('tweets.search')">
             {{ __('Tweet検索') }}
+          </x-nav-link>
+          <!-- 🔽 リンク追加 -->
+          <x-nav-link :href="route('profile.show', auth()->user())" :active="request()->routeIs('profile.show')">
+            {{ __('マイページ') }}
           </x-nav-link>
         </div>
       </div>
@@ -88,9 +89,12 @@
       <x-responsive-nav-link :href="route('tweets.create')" :active="request()->routeIs('tweets.create')">
         {{ __('Tweet作成') }}
       </x-responsive-nav-link>
-      <!-- 🔽 リンク追加 -->
       <x-responsive-nav-link :href="route('tweets.search')" :active="request()->routeIs('tweets.search')">
         {{ __('Tweet検索') }}
+      </x-responsive-nav-link>
+      <!-- 🔽 リンク追加 -->
+      <x-responsive-nav-link :href="route('profile.show', auth()->user())" :active="request()->routeIs('profile.show')">
+        {{ __('マイページ') }}
       </x-responsive-nav-link>
     </div>
 
